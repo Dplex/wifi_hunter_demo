@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.wifi_hunter_demo">
    <application
-        android:label="wifi_hunter_demo"
+        android:label="compass_hunter"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
