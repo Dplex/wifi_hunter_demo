@@ -11,7 +11,7 @@ Future<http.Response> sendFingerprint(String locationId, List<result.WiFiHunterR
         'userid': 'test_jhr',
         'locationid': locationId,
         'deviceid': 'test_jhr',
-        'timestamp': 0,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
         'wifi': results.map((e) => {
           'mac': e.BSSID,
           'rssi': e.level,
