@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  bot_toast:
+    dependency: "direct main"
+    description:
+      name: bot_toast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.1"
   characters:
     dependency: transitive
     description:
@@ -63,7 +70,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_compass:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_compass
       url: "https://pub.dartlang.org"
@@ -143,14 +150,14 @@ packages:
     source: hosted
     version: "3.0.1+1"
   rxdart:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.3"
   sensors_plus:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: sensors_plus
       url: "https://pub.dartlang.org"
@@ -204,7 +211,7 @@ packages:
     source: hosted
     version: "1.1.0"
   syncfusion_flutter_charts:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
       url: "https://pub.dartlang.org"
@@ -232,7 +239,7 @@ packages:
     source: hosted
     version: "0.4.2"
   tuple:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: tuple
       url: "https://pub.dartlang.org"

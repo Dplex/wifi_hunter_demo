@@ -1,16 +1,15 @@
-
-import 'dart:async';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:msp/blocs/stream_bloc.dart';
 
-class CompassBlock {
-  final _compassFetcher = StreamController<int>();
+class CompassBloc extends StreamBloc<int> {
   int calibrationDegree = 0;
-  Stream<int> get stream => _compassFetcher.stream;
 
-  startListenCompass() {
-    FlutterCompass.events?.listen((event) {
+  @override
+  void start() {
+    super.start();
+    subscription = FlutterCompass.events?.listen((event) {
       var heading = event.heading?.toInt() ?? 0;
-      _compassFetcher.sink.add((heading - calibrationDegree + 360).remainder(360));
+      pub((heading - calibrationDegree + 360).remainder(360));
     });
   }
 
@@ -18,14 +17,6 @@ class CompassBlock {
     calibrationDegree = degree + calibrationDegree;
   }
 
-  stopListenCompass() {
-    FlutterCompass.events?.listen(null);
-  }
-
-  dispose() {
-    stopListenCompass();
-    // _compassFetcher.close();
-  }
 }
 
-final compassBloc = CompassBlock();
+final compassBloc = CompassBloc();
