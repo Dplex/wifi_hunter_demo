@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:msp/blocs/stream_bloc.dart';
+import 'package:msp/config.dart';
 import 'package:msp/models/accelerometer.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
@@ -10,9 +11,10 @@ class AccelerometerBloc extends StreamBloc<Accelerometer> {
   double norm = 0;
   int lastEpoch = 0;
   StreamController<int> _stepCounterFetcher = StreamController<int>();
+
   Stream<int> get stepCounterStream => _stepCounterFetcher.stream;
 
-  StreamSubscription? _stepSubscription = null;
+  StreamSubscription? _stepSubscription;
 
   @override
   void start() {
@@ -33,11 +35,13 @@ class AccelerometerBloc extends StreamBloc<Accelerometer> {
 
   Future checkStep(double _norm) async {
     var currentEpoch = DateTime.now().millisecondsSinceEpoch;
-    if (norm < _norm && _norm >= 1.8 && currentEpoch - lastEpoch > 400) {
+    if (norm < _norm &&
+        _norm >= configuration.triggerNorm &&
+        currentEpoch - lastEpoch > configuration.triggerIntervalMin) {
       lastEpoch = currentEpoch;
       count++;
       _stepCounterFetcher.sink.add(count);
-      developer.log('step : ${count}');
+      developer.log('step : $count');
     }
     norm = _norm;
   }

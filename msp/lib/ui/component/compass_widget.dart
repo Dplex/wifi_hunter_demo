@@ -17,6 +17,7 @@ class _CompassWidgetState extends State<CompassWidget> {
 
   @override
   void dispose() {
+    developer.log('Compass Widget Dispose');
     isActive = false;
     try {
       compassBlocStreamSubscription?.cancel();
@@ -30,18 +31,21 @@ class _CompassWidgetState extends State<CompassWidget> {
 
   @override
   void initState() {
-    isActive = true;
-    try {
-      compassBloc.start();
-      compassBlocStreamSubscription = compassBloc.stream.listen((event) {
-        if (isActive) {
-          setState(() => turns = event);
-        }
-      });
-    } catch (exception) {
-      developer.log('Init Error', error: exception);
-    }
     super.initState();
+    developer.log('Compass Widget Init');
+    isActive = true;
+    Future.delayed(const Duration(milliseconds: 500), () {
+      try {
+        compassBloc.start();
+        compassBlocStreamSubscription = compassBloc.stream.listen((event) {
+          if (isActive) {
+            setState(() => turns = event);
+          }
+        });
+      } catch (exception) {
+        developer.log('Init Error', error: exception);
+      }
+    });
   }
 
   @override

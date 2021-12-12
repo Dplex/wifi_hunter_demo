@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:msp/blocs/accelerometer_bloc.dart';
@@ -26,21 +27,24 @@ class _PositionListState extends State<PositionList> {
 
   @override
   void initState() {
-    try {
-      accelerometerBloc.start();
-      accelerometerBloc.stream.listen(dataListen);
-
-    } catch (e) {}
     super.initState();
+    developer.log('Sensor List Init');
+    Future.delayed(const Duration(milliseconds: 500), () {
+      try {
+        accelerometerBloc.start();
+        accelerometerBloc.stream.listen(dataListen);
+      } catch (e) {
+        developer.log(e.toString());
+      }
+    });
   }
 
   @override
   void dispose() {
+    developer.log('Sensor List Dispose');
     accelerometerBloc.stop();
     super.dispose();
   }
-
-  void init() {}
 
   void dataListen(Accelerometer event) {
     if (chartDataTupleList.isEmpty) {

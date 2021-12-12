@@ -5,7 +5,7 @@ class StreamBloc<T> {
   StreamController<T> _fetcher = StreamController<T>();
 
   Stream<T> get stream => _fetcher.stream;
-  StreamSubscription? subscription = null;
+  StreamSubscription? subscription;
 
   bool isStarted = false;
 
@@ -14,7 +14,7 @@ class StreamBloc<T> {
 
     isStarted = true;
     _fetcher = StreamController<T>();
-    developer.log('${this.runtimeType} Started');
+    developer.log('$runtimeType Started');
   }
 
   void stop() {
@@ -22,7 +22,7 @@ class StreamBloc<T> {
     subscription?.cancel();
     subscription = null;
     _fetcher.close();
-    developer.log('${this.runtimeType} Stopped');
+    developer.log('$runtimeType Stopped');
   }
 
   void pub(T event) {

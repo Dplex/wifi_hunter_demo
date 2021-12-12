@@ -1,9 +1,10 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:msp/const.dart';
+import 'package:msp/config.dart';
 import 'package:msp/services/particle_service.dart';
 import 'package:msp/ui/component/map_painter.dart';
 import 'package:tuple/tuple.dart';
+import 'dart:developer' as developer;
 
 class MapList extends StatelessWidget {
   @override
@@ -12,7 +13,7 @@ class MapList extends StatelessWidget {
       decoration: BoxDecoration(
           image: DecorationImage(
               colorFilter: ColorFilter.mode(mapOpacity, BlendMode.dstATop), image: mapImage.image, fit: BoxFit.fill)),
-      child: MapPaint(),
+      child: const MapPaint(),
     );
   }
 }
@@ -30,12 +31,15 @@ class _MapPaintState extends State<MapPaint> with SingleTickerProviderStateMixin
   late Animation<double> _animation;
   late AnimationController _controller;
   List<Tuple4<double, double, double, double>> blockList = [];
-  Tuple4<double, double, double, double>? currentBlock = null;
-  List<Tuple2<double, double>> currentParticle = [Tuple2(100, 200)];
+  Tuple4<double, double, double, double>? currentBlock;
+  List<Tuple2<double, double>> currentParticle = [const Tuple2(100, 200)];
   late ParticleService particleService;
 
   blockAdd(Offset position) {
     setCurrentEndOffset(position);
+    if (currentBlock!.item1 > currentBlock!.item3) {
+      currentBlock = Tuple4(currentBlock!.item3, currentBlock!.item4, currentBlock!.item1, currentBlock!.item2);
+    }
     setState(() {
       blockList.add(currentBlock!);
       currentBlock = null;
@@ -64,14 +68,12 @@ class _MapPaintState extends State<MapPaint> with SingleTickerProviderStateMixin
   }
 
   setCurrentEndOffset(Offset position) {
-    var dx1 = position.dx > currentBlock!.item1 ? currentBlock!.item1 : position.dx;
-    var dy1 = dx1 == position.dx ? position.dy : currentBlock!.item2;
-    var dx2 = position.dx + currentBlock!.item1 - dx1;
-    var dy2 = position.dy + currentBlock!.item2 - dy1;
-    currentBlock = Tuple4(dx1, dy1, dx2, dy2);
+    currentBlock = currentBlock!.withItem3(position.dx).withItem4(position.dy);
   }
 
-  void animationListener() => setState(() {});
+  void animationListener() => setState(() {
+
+  });
 
   @override
   void initState() {
@@ -79,9 +81,9 @@ class _MapPaintState extends State<MapPaint> with SingleTickerProviderStateMixin
     _animation = Tween<double>(begin: 4, end: 6).animate(_controller)
       ..addListener(animationListener)
       ..addStatusListener((status) {
-        if (status == AnimationStatus.completed)
+        if (status == AnimationStatus.completed) {
           _controller.repeat();
-        else if (status == AnimationStatus.dismissed) _controller.forward();
+        } else if (status == AnimationStatus.dismissed) _controller.forward();
       });
     _controller.forward();
     super.initState();
@@ -90,7 +92,14 @@ class _MapPaintState extends State<MapPaint> with SingleTickerProviderStateMixin
   }
 
   @override
+  void deactivate() {
+    particleService.shutdown();
+    super.deactivate();
+  }
+
+  @override
   void dispose() {
+
     if (_controller.isAnimating) {
       _controller.dispose();
       _animation.removeListener(animationListener);
@@ -111,20 +120,20 @@ class _MapPaintState extends State<MapPaint> with SingleTickerProviderStateMixin
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('Confirm'),
+                      title: const Text('Confirm'),
                       actions: [
                         TextButton(
                             onPressed: () {
                               blockAdd(position.localPosition);
                               Navigator.of(context).pop();
                             },
-                            child: Text("Accept")),
+                            child: const Text("Accept")),
                         TextButton(
                           onPressed: () {
                             currentBlock = null;
                             Navigator.of(context).pop();
                           },
-                          child: Text("Cancel"),
+                          child: const Text("Cancel"),
                         )
                       ],
                     );
@@ -132,6 +141,7 @@ class _MapPaintState extends State<MapPaint> with SingleTickerProviderStateMixin
             },
         child: CustomPaint(
           painter: MspPainter(_animation.value, blockList, currentBlock, currentParticle),
+          // painter: MspPainter(5, blockList, currentBlock, currentParticle),
         ));
   }
 }

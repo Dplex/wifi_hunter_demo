@@ -34,6 +34,7 @@ class MspPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(MspPainter oldDelegate) {
-    return this.radians != oldDelegate.radians;
+    return true;
+    // return radians != oldDelegate.radians;
   }
 }
