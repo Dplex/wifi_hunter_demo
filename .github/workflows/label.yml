@@ -17,5 +17,5 @@ jobs:
       pull-requests: write
 
     steps:
-    - name: test
-    - run: echo abc
+      - name: test
+      - run: echo abc
