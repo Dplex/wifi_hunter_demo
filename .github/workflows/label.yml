@@ -43,3 +43,7 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
+      - name: Dump matrix context
+        env:
+          pr_href: ${{ github.event.pull_request._links.html.href }}.diff
+        run: echo "$pr_href"
